@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React, { useState } from "react";
 import {
   Container,
@@ -19,7 +20,7 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { Delete, Edit } from "@mui/icons-material";
 import ModalForm from "./ModalForm";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { deletePerson, getPeople } from "store/slices/person";
 import ConfirmationDialog from "components/ConfirmationDialog";
 
@@ -74,6 +75,10 @@ const PeopleTable = ({ people }) => {
     );
   };
 
+  ActionsTable.propTypes = {
+    person: PropTypes.instanceOf(Object),
+  };
+
   const TablePaginationActions = (props) => {
     const { count, page, rowsPerPage, onPageChange } = props;
 
@@ -125,6 +130,13 @@ const PeopleTable = ({ people }) => {
         </IconButton>
       </Box>
     );
+  };
+
+  TablePaginationActions.propTypes = {
+    count: PropTypes.number,
+    page: PropTypes.number,
+    rowsPerPage: PropTypes.number,
+    onPageChange: PropTypes.func,
   };
 
   return (
@@ -213,6 +225,20 @@ const PeopleTable = ({ people }) => {
       </Container>
     </>
   );
+};
+
+PeopleTable.propTypes = {
+  people: PropTypes.shape({
+    length: PropTypes.any,
+    map: PropTypes.func,
+  }),
+  person: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    work_description: PropTypes.string,
+    created_at: PropTypes.instanceOf(Date),
+    updated_at: PropTypes.instanceOf(Date),
+  }),
 };
 
 export default PeopleTable;

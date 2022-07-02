@@ -1,3 +1,5 @@
+import React from "react";
+import PropTypes from "prop-types";
 import { createContext, useContext, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
@@ -48,6 +50,10 @@ export const AuthProvider = ({ children }) => {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.element,
 };
 
 export const useAuth = () => {

@@ -7,7 +7,7 @@ import ModalForm from "./components/ModalForm";
 
 const RegisterPeoplePage = () => {
   const dispatch = useDispatch();
-  const { isLoading, people = [] } = useSelector((state) => state.people);
+  const { people = [] } = useSelector((state) => state.people);
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {

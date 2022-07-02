@@ -1,4 +1,5 @@
-import * as React from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import MuiAppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -119,4 +120,8 @@ export const AppBar = ({ pages }) => {
       </Container>
     </MuiAppBar>
   );
+};
+
+AppBar.propTypes = {
+  pages: PropTypes.instanceOf(Array),
 };

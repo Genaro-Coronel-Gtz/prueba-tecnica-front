@@ -1,8 +1,9 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { Button, TextField, Box, Modal } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updatePerson, getPeople, createPerson } from "store/slices/person";
 
 const style = {
@@ -125,6 +126,16 @@ const ModalForm = ({ open, person, closeModal }) => {
       </Box>
     </Modal>
   );
+};
+
+ModalForm.propTypes = {
+  closeModal: PropTypes.func,
+  open: PropTypes.bool,
+  person: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    work_description: PropTypes.string,
+  }),
 };
 
 export default ModalForm;

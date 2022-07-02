@@ -19,6 +19,7 @@ export const useLocalStorage = (keyName, defaultValue) => {
   const setValue = (newValue) => {
     try {
       window.localStorage.setItem(keyName, JSON.stringify(newValue));
+      // eslint-disable-next-line no-empty
     } catch (err) {}
     setStoredValue(newValue);
   };
