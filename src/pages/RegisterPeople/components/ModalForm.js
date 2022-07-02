@@ -68,10 +68,19 @@ const ModalForm = ({ open, person, closeModal, alert }) => {
     const response = await dispatch(createPerson(newPerson));
 
     if (!response.error) {
+      alert({
+        message: "Persona creada correctamente",
+        type: "success",
+        open: true,
+      });
       dispatch(getPeople());
       closeModal();
     } else {
-      alert("Error al crear persona");
+      alert({
+        message: "Error al crear persona",
+        type: "error",
+        open: true,
+      });
     }
   };
 
