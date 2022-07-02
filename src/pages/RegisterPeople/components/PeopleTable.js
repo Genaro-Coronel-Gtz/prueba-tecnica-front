@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux";
 import { deletePerson, getPeople } from "store/slices/person";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import AlertMessage from "components/AlertMessage";
+import { formatDate } from "helpers/functions";
 
 const PeopleTable = ({ people }) => {
   const dispatch = useDispatch();
@@ -95,7 +96,7 @@ const PeopleTable = ({ people }) => {
         </Tooltip>
         <Tooltip title="Eliminar persona" arrow>
           <IconButton onClick={() => handleDelete(person)}>
-            <Delete fontSize="small" color="danger" />
+            <Delete fontSize="small" color="error" />
           </IconButton>
         </Tooltip>
       </Box>
@@ -128,7 +129,7 @@ const PeopleTable = ({ people }) => {
         title="Eliminar persona"
         message={`Estas seguro que deses eliminar la persona ${personSelected.name}`}
       />
-      <Container component="main">
+      <Container component="main" sx={{ marginBottom: 10 }}>
         <Box
           sx={{
             marginTop: 4,
@@ -166,8 +167,12 @@ const PeopleTable = ({ people }) => {
                     <TableCell align="right">
                       {person.work_description}
                     </TableCell>
-                    <TableCell align="right">{person.created_at}</TableCell>
-                    <TableCell align="right">{person.updated_at}</TableCell>
+                    <TableCell align="right">
+                      {formatDate(person.created_at)}
+                    </TableCell>
+                    <TableCell align="right">
+                      {formatDate(person.updated_at)}
+                    </TableCell>
                     <TableCell align="right">
                       <ActionsTable person={person} />
                     </TableCell>

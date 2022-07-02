@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export const fracttalApi = axios.create({
-  baseURL: "http://localhost:5000",
-  // baseURL: "http://ec2-54-90-130-2.compute-1.amazonaws.com:5000",
+  // baseURL: "http://localhost:5000",
+  baseURL: "http://ec2-54-90-130-2.compute-1.amazonaws.com:5000",
 });
 
 export const apiConfiguration = () => {

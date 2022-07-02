@@ -1,25 +1,39 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-// import { Link as RouterLink } from "react-router-dom";
-// import { useAuth } from "../../hooks/useAuth";
+import React, { useEffect } from "react";
+import { Container, Box, Stack, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getLogs } from "store/slices/log";
+import LogsTable from "./components/LogsTable";
 
 const LogsPage = () => {
-  //  const { login } = useAuth();
+  const dispatch = useDispatch();
+  const { logs = [] } = useSelector((state) => state.logs);
+
+  useEffect(() => {
+    dispatch(getLogs());
+  }, []);
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <span>Logs</span>
-      </Box>
-    </Container>
+    <>
+      <Container component="main">
+        <Box
+          sx={{
+            marginTop: 15,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            paddingX={4}
+          >
+            <Typography variant="h6">Listado de logs</Typography>
+          </Stack>
+          <LogsTable logs={logs} />
+        </Box>
+      </Container>
+    </>
   );
 };
 
