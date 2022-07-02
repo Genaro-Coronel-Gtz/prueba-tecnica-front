@@ -10,16 +10,43 @@ import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import signUpImage from "assets/signup.jpg";
 import sha256 from "crypto-js/sha256";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 const SignUpPage = () => {
   const { signup } = useAuth();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const validationSchema = yup.object({
+    username: yup
+      .string("Ingresa tu usuario")
+      .required("El usuario es requerido"),
+    password: yup
+      .string("Ingres tu clave")
+      .min(8, "La clave debe tener al menos 8 caracteres")
+      .required("La clave es requerida"),
+    passwordConfirmation: yup
+      .string("Ingres la confirmación de la clave")
+      .min(8, "La clave debe tener al menos 8 caracteres")
+      .oneOf([yup.ref("password"), null], "Las Claves debe ser iguales")
+      .required("La confirmación de clave es requerida"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+      passwordConfirmation: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      handleSubmit(values);
+    },
+  });
+
+  const handleSubmit = (values) => {
     signup({
-      username: data.get("username"),
-      password: sha256(data.get("password")).toString(),
+      username: values.username,
+      password: sha256(values.password).toString(),
     });
   };
 
@@ -54,7 +81,7 @@ const SignUpPage = () => {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={formik.handleSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -67,6 +94,10 @@ const SignUpPage = () => {
               name="username"
               autoComplete="username"
               autoFocus
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              error={formik.touched.username && Boolean(formik.errors.username)}
+              helperText={formik.touched.username && formik.errors.username}
             />
             <TextField
               margin="normal"
@@ -77,6 +108,10 @@ const SignUpPage = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
             />
             <TextField
               margin="normal"
@@ -87,6 +122,16 @@ const SignUpPage = () => {
               type="password"
               id="passwordConfirmation"
               autoComplete="current-password-confirmation"
+              value={formik.values.passwordConfirmation}
+              onChange={formik.handleChange}
+              error={
+                formik.touched.passwordConfirmation &&
+                Boolean(formik.errors.passwordConfirmation)
+              }
+              helperText={
+                formik.touched.passwordConfirmation &&
+                formik.errors.passwordConfirmation
+              }
             />
             <Button
               type="submit"
@@ -99,7 +144,7 @@ const SignUpPage = () => {
             <Grid container>
               <Grid item>
                 <RouterLink to="/login">
-                  Ya tienes una cuenta, inicia session aquí?
+                  ¿Ya tienes una cuenta? Inicia session aquí
                 </RouterLink>
               </Grid>
             </Grid>

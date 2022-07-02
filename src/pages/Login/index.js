@@ -10,16 +10,37 @@ import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import loginImage from "assets/login.jpg";
 import sha256 from "crypto-js/sha256";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 const LoginPage = () => {
   const { login } = useAuth();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const validationSchema = yup.object({
+    username: yup
+      .string("Ingresa tu usuario")
+      .required("El usuario es requerido"),
+    password: yup
+      .string("Ingres tu clave")
+      .min(8, "La clave debe tener al menos 8 caracteres")
+      .required("La clave es requerida"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      username: "usuario",
+      password: "clave",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      handleSubmit(values);
+    },
+  });
+
+  const handleSubmit = (values) => {
     login({
-      username: data.get("email"),
-      password: sha256(data.get("password")).toString(),
+      username: values.username,
+      password: sha256(values.password).toString(),
     });
   };
 
@@ -52,21 +73,19 @@ const LoginPage = () => {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <form component="form" onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
+              id="username"
               label="Usuario"
-              name="email"
-              autoComplete="email"
+              name="username"
               autoFocus
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              error={formik.touched.username && Boolean(formik.errors.username)}
+              helperText={formik.touched.username && formik.errors.username}
             />
             <TextField
               margin="normal"
@@ -77,6 +96,10 @@ const LoginPage = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
             />
             <Button
               type="submit"
@@ -89,11 +112,11 @@ const LoginPage = () => {
             <Grid container>
               <Grid item>
                 <RouterLink to="/signup">
-                  ¿No tienes cuenta?, inicia session aquí.
+                  ¿No tienes cuenta? Regístrate aquí.
                 </RouterLink>
               </Grid>
             </Grid>
-          </Box>
+          </form>
         </Box>
       </Grid>
       <Grid item xs={12} md={4}>
