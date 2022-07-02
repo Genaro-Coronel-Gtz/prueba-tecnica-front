@@ -8,15 +8,16 @@ const AlertMessage = ({
   message,
   vertical = "top",
   horizontal = "center",
+  type = "info",
 }) => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={6000}
+      autoHideDuration={3000}
       onClose={close}
       anchorOrigin={{ vertical: vertical, horizontal: horizontal }}
     >
-      <Alert onClose={close} severity="error">
+      <Alert onClose={close} severity={type}>
         {message}
       </Alert>
     </Snackbar>
@@ -29,4 +30,7 @@ AlertMessage.propTypes = {
   message: PropTypes.string,
   open: PropTypes.bool,
   vertical: PropTypes.string,
+  type: PropTypes.string,
 };
+
+export default AlertMessage;

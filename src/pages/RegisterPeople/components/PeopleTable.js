@@ -13,6 +13,7 @@ import {
   TablePagination,
   TableFooter,
   Paper,
+  Tooltip,
 } from "@mui/material";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
@@ -23,6 +24,7 @@ import ModalForm from "./ModalForm";
 import { useDispatch } from "react-redux";
 import { deletePerson, getPeople } from "store/slices/person";
 import ConfirmationDialog from "components/ConfirmationDialog";
+import AlertMessage from "components/AlertMessage";
 
 const PeopleTable = ({ people }) => {
   const dispatch = useDispatch();
@@ -31,6 +33,14 @@ const PeopleTable = ({ people }) => {
   const [personSelected, setPersonSelected] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const initialAlert = {
+    message: "",
+    open: false,
+    type: "info",
+  };
+
+  const [alert, setAlert] = useState(initialAlert);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -46,14 +56,23 @@ const PeopleTable = ({ people }) => {
     setOpenModal(true);
   };
 
-  const performDelete = () => {
-    const response = dispatch(deletePerson(personSelected));
+  const performDelete = async () => {
+    const response = await dispatch(deletePerson(personSelected));
     if (!response.error) {
       setShowConfirmation(false);
       setPersonSelected({});
       dispatch(getPeople());
+      setAlert({
+        open: true,
+        message: "Persona eliminada correctamente",
+        type: "success",
+      });
     } else {
-      alert("error al eliminar");
+      setAlert({
+        open: true,
+        message: "Error al eliminar persona",
+        type: "error",
+      });
     }
   };
 
@@ -62,15 +81,27 @@ const PeopleTable = ({ people }) => {
     setShowConfirmation(true);
   };
 
+  const alertUpdate = (alertData) => {
+    setAlert({
+      open: alertData.open,
+      message: alertData.message,
+      type: alertData.type,
+    });
+  };
+
   const ActionsTable = ({ person }) => {
     return (
       <Box style={{ display: "flex", direction: "row" }}>
-        <IconButton onClick={() => handleEdit(person)}>
-          <Edit fontSize="small" color="secondary" />
-        </IconButton>
-        <IconButton onClick={() => handleDelete(person)}>
-          <Delete fontSize="small" color="danger" />
-        </IconButton>
+        <Tooltip title="Editar persona" arrow>
+          <IconButton onClick={() => handleEdit(person)}>
+            <Edit fontSize="small" color="secondary" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Eliminar persona" arrow>
+          <IconButton onClick={() => handleDelete(person)}>
+            <Delete fontSize="small" color="danger" />
+          </IconButton>
+        </Tooltip>
       </Box>
     );
   };
@@ -141,7 +172,14 @@ const PeopleTable = ({ people }) => {
 
   return (
     <>
+      <AlertMessage
+        message={alert.message}
+        type={alert.type}
+        open={alert.open}
+        close={() => setAlert(initialAlert)}
+      />
       <ModalForm
+        alert={alertUpdate}
         person={personSelected}
         open={openModal}
         closeModal={() => setOpenModal(false)}
@@ -228,10 +266,7 @@ const PeopleTable = ({ people }) => {
 };
 
 PeopleTable.propTypes = {
-  people: PropTypes.shape({
-    length: PropTypes.any,
-    map: PropTypes.func,
-  }),
+  people: PropTypes.array,
   person: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,

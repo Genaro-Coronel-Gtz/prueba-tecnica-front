@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Box, Button, Stack, Typography } from "@mui/material";
+import {
+  Container,
+  Box,
+  Button,
+  Stack,
+  Typography,
+  Tooltip,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getPeople } from "store/slices/person";
 import PeopleTable from "./components/PeopleTable";
@@ -40,9 +47,11 @@ const RegisterPeoplePage = () => {
             paddingX={4}
           >
             <Typography variant="h6">Listado de personas</Typography>
-            <Button variant="outlined" onClick={handleCreatePerson}>
-              Registrar persona
-            </Button>
+            <Tooltip title="Crear nueva persona" arrow>
+              <Button variant="outlined" onClick={handleCreatePerson}>
+                Registrar persona
+              </Button>
+            </Tooltip>
           </Stack>
           <PeopleTable people={people} />
         </Box>

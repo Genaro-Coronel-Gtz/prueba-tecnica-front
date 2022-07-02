@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, TextField, Box, Modal } from "@mui/material";
+import { Button, TextField, Box, Modal, Tooltip } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
@@ -34,7 +34,7 @@ const validationSchema = yup.object({
     .required("La descripción del trabajo es requerida"),
 });
 
-const ModalForm = ({ open, person, closeModal }) => {
+const ModalForm = ({ open, person, closeModal, alert }) => {
   const dispatch = useDispatch();
 
   const handleClose = () => {
@@ -50,8 +50,17 @@ const ModalForm = ({ open, person, closeModal }) => {
     if (!response.error) {
       dispatch(getPeople());
       closeModal();
+      alert({
+        message: "Persona actualizada correctamente",
+        type: "success",
+        open: true,
+      });
     } else {
-      alert("Error al editar");
+      alert({
+        message: "Error al actualizar persona",
+        type: "error",
+        open: true,
+      });
     }
   };
 
@@ -107,9 +116,11 @@ const ModalForm = ({ open, person, closeModal }) => {
             formik.touched.work_description && formik.errors.work_description
           }
         />
-        <Button color="primary" variant="outlined" fullWidth type="submit">
-          {person ? "Actualizar" : "Crear"}
-        </Button>
+        <Tooltip title={person ? "Actualizar persona" : "Crear persona"} arrow>
+          <Button color="primary" variant="outlined" fullWidth type="submit">
+            {person ? "Actualizar" : "Crear"}
+          </Button>
+        </Tooltip>
       </form>
     );
   };
@@ -131,6 +142,7 @@ const ModalForm = ({ open, person, closeModal }) => {
 ModalForm.propTypes = {
   closeModal: PropTypes.func,
   open: PropTypes.bool,
+  alert: PropTypes.func,
   person: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
