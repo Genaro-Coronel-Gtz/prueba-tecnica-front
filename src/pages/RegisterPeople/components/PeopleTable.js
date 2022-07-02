@@ -15,10 +15,6 @@ import {
   Paper,
   Tooltip,
 } from "@mui/material";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
 import { Delete, Edit } from "@mui/icons-material";
 import ModalForm from "./ModalForm";
 import { useDispatch } from "react-redux";
@@ -110,66 +106,6 @@ const PeopleTable = ({ people }) => {
     person: PropTypes.instanceOf(Object),
   };
 
-  const TablePaginationActions = (props) => {
-    const { count, page, rowsPerPage, onPageChange } = props;
-
-    const handleFirstPageButtonClick = (event) => {
-      onPageChange(event, 0);
-    };
-
-    const handleBackButtonClick = (event) => {
-      onPageChange(event, page - 1);
-    };
-
-    const handleNextButtonClick = (event) => {
-      onPageChange(event, page + 1);
-    };
-
-    const handleLastPageButtonClick = (event) => {
-      onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-    };
-
-    return (
-      <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-        <IconButton
-          onClick={handleFirstPageButtonClick}
-          disabled={page === 0}
-          aria-label="first page"
-        >
-          <FirstPageIcon />
-        </IconButton>
-        <IconButton
-          onClick={handleBackButtonClick}
-          disabled={page === 0}
-          aria-label="previous page"
-        >
-          <KeyboardArrowLeft />
-        </IconButton>
-        <IconButton
-          onClick={handleNextButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-          aria-label="next page"
-        >
-          <KeyboardArrowRight />
-        </IconButton>
-        <IconButton
-          onClick={handleLastPageButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-          aria-label="last page"
-        >
-          <LastPageIcon />
-        </IconButton>
-      </Box>
-    );
-  };
-
-  TablePaginationActions.propTypes = {
-    count: PropTypes.number,
-    page: PropTypes.number,
-    rowsPerPage: PropTypes.number,
-    onPageChange: PropTypes.func,
-  };
-
   return (
     <>
       <AlertMessage
@@ -214,7 +150,13 @@ const PeopleTable = ({ people }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {people.map((person) => (
+                {(rowsPerPage > 0
+                  ? people.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : people
+                ).map((person) => (
                   <TableRow
                     key={person.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -235,12 +177,7 @@ const PeopleTable = ({ people }) => {
               <TableFooter>
                 <TableRow>
                   <TablePagination
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { label: "Todo", value: -1 },
-                    ]}
+                    rowsPerPageOptions={[5, 10, 25]}
                     colSpan={3}
                     count={people.length}
                     rowsPerPage={rowsPerPage}
@@ -253,7 +190,7 @@ const PeopleTable = ({ people }) => {
                     }}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
+                    labelRowsPerPage="Personas por página"
                   />
                 </TableRow>
               </TableFooter>
