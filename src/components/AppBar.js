@@ -112,7 +112,7 @@ export const AppBar = ({ pages }) => {
                 onClick={logout}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {"logout"}
+                {"Logout"}
               </Button>
             )}
           </Box>

@@ -5,9 +5,9 @@ export const loginUser = (payload) => {
   return async (dispatch) => {
     dispatch(startLoadingUser());
 
-    const { data } = await fracttalApi.post(`/login`, payload);
+    const response = await fracttalApi.post(`/login`, payload);
 
-    dispatch(setUser({ user: data }));
+    return response;
   };
 };
 

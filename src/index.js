@@ -8,6 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthProvider } from "hooks/useAuth";
 import { store } from "store";
+import CssBaseline from "@mui/material/CssBaseline";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -15,6 +16,16 @@ const theme = createTheme({
   palette: {
     primary: { main: "#007CFF" },
     secondary: { main: "#7CB1FF" },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontSize: 16,
+          textTransform: "none",
+        },
+      },
+    },
   },
 });
 
@@ -24,6 +35,7 @@ root.render(
       <BrowserRouter>
         <AuthProvider>
           <ThemeProvider theme={theme}>
+            <CssBaseline />
             <App />
           </ThemeProvider>
         </AuthProvider>
