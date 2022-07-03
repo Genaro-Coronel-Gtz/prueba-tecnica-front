@@ -23,8 +23,7 @@ En el directorio se pueden utilizar los siguientes scripts
 
 Inicia la aplicacion en modo desarrollo
 
-Abrir [http://localhost:3000](http://localhost:3000) para ver en el navegador
-
+Abrir [http://localhost:3000](http://localhost:3000) para ver la app en el navegador.
 
 ### `npm run lint`
 
